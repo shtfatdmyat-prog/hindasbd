@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinda's Birthday</title>
+  
+  <!-- خطوط Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amiri:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-cream: #f4efe9;
+      --card-bg: #ffffff;
+      --gold: #b38e56;
+      --gold-light: #e5d7c3;
+      --dark-text: #2f2f2f;
+      --gray-text: #666666;
+      --wax-color: #be8e78;
+      --wax-border: #9b6c56;
+      --gift-bg: #f9f1eb; /* لون مختلف ومميز لركن الهدايا */
+      --gift-border: #d4a373;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #111;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      background-color: var(--bg-cream);
+      background-image: 
+        linear-gradient(rgba(244, 239, 233, 0.75), rgba(244, 239, 233, 0.9)),
+        url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow-x: hidden;
+      box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    }
+
+    /* 1. شاشة الظرف الافتتاحية */
+    #envelope-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 1000;
+      background-color: rgba(244, 239, 233, 0.95);
+      background-image: 
+        linear-gradient(rgba(244, 239, 233, 0.8), rgba(244, 239, 233, 0.8)),
+        url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.8s ease;
+    }
+
+    .top-brand {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .top-brand .script {
+      font-family: 'Alex Brush', cursive;
+      font-size: 38px;
+      color: #3a3a3a;
+      display: block;
+      margin-bottom: -10px;
+    }
+    .top-brand .caps {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      letter-spacing: 5px;
+      color: #4a4a4a;
+      font-weight: 600;
+    }
+
+    .envelope-box {
+      width: 320px;
+      height: 220px;
+      background: #e8ded1;
+      position: relative;
+      border-radius: 4px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+    }
+
+    .envelope-box .pocket {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid #ece4d9;
+      border-right: 160px solid #ece4d9;
+      border-bottom: 115px solid #ded3c3;
+      border-top: 105px solid transparent;
+      border-radius: 0 0 4px 4px;
+      z-index: 2;
+    }
+
+    .envelope-box .flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid transparent;
+      border-right: 160px solid transparent;
+      border-top: 120px solid #ded3c3;
+      transform-origin: top;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 3;
+    }
+
+    .wax-seal {
+      position: absolute;
+      top: 92px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 58px;
+      height: 58px;
+      background: radial-gradient(circle at 35% 35%, #d8a690, var(--wax-color) 60%, var(--wax-border) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      z-index: 4;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    .wax-seal span {
+      font-family: 'Alex Brush', cursive;
+      font-size: 30px;
+      color: #fbede5;
+    }
+
+    .open-hint {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #777;
+      letter-spacing: 1px;
+      animation: pulse 1.8s infinite;
+    }
+
+    .envelope-box.is-open .flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+    .envelope-box.is-open .wax-seal {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.6);
+    }
+
+    /* 2. محتوى الدعوة */
+    .content-stream {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      padding: 30px 16px 60px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+    }
+    .content-stream.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-card, .arched-invitation-card, .white-section-card, .gift-section-card {
+      width: 100%;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border-radius: 24px;
+      padding: 35px 20px 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .polaroid-frame {
+      width: 150px;
+      background: #fff;
+      padding: 8px 8px 24px;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      transform: rotate(-4deg);
+    }
+    .polaroid-frame img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 34px;
+      font-style: italic;
+      color: #333;
+      margin-bottom: 25px;
+      line-height: 1.1;
+    }
+    .hero-title span {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      letter-spacing: 4px;
+      font-style: normal;
+      display: block;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .mini-seal {
+      width: 48px;
+      height: 48px;
+      background: radial-gradient(circle at 35% 35%, #d8a690, var(--wax-color) 60%, var(--wax-border) 100%);
+      border-radius: 50%;
+      margin: 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Alex Brush', cursive;
+      font-size: 24px;
+    }
+
+    .scroll-btn {
+      display: inline-block;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #555;
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 1px solid #999;
+      padding-bottom: 2px;
+    }
+
+    .arched-invitation-card {
+      background: #ffffff;
+      border-radius: 200px 200px 16px 16px;
+      padding: 55px 24px 35px;
+      text-align: center;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--gold-light);
+      position: relative;
+    }
+
+    .cake-icon {
+      width: 42px;
+      margin-bottom: 20px;
+    }
+
+    .invitation-quote {
+      font-family: 'Amiri', serif;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #4a4a4a;
+      margin-bottom: 15px;
+    }
+
+    .invitation-body {
+      font-family: 'Amiri', serif;
+      font-size: 16px;
+      line-height: 1.9;
+      color: #333;
+    }
+
+    .graduate-name {
+      font-family: 'Alex Brush', cursive;
+      font-size: 42px;
+      color: var(--gold);
+      margin: 10px 0;
+      display: block;
+    }
+
+    .invitation-date {
+      font-size: 14px;
+      color: var(--dark-text);
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+    .invitation-date .big-date {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .white-section-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+    }
+
+    /* سيكشن ركن الهدايا بلون وتنسيق مختلف ومميز */
+    .gift-section-card {
+      background: var(--gift-bg);
+      border: 1.5px dashed var(--gift-border);
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(212, 163, 115, 0.15);
+    }
+    .gift-title {
+      font-size: 18px;
+      color: #8c5830;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .gift-desc {
+      font-size: 14px;
+      color: #6a4c33;
+      line-height: 1.7;
+      font-family: 'Amiri', serif;
+    }
+
+    .section-header {
+      font-size: 17px;
+      color: var(--dark-text);
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .countdown-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      direction: ltr;
+      gap: 12px;
+    }
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 50px;
+    }
+    .countdown-item .num {
+      font-size: 26px;
+      font-weight: 600;
+      color: #222;
+      font-family: 'Playfair Display', serif;
+    }
+    .countdown-item .unit {
+      font-size: 10px;
+      color: #888;
+      margin-top: 3px;
+    }
+    .countdown-colon {
+      font-size: 20px;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+
+    .timeline-container {
+      position: relative;
+      margin: 25px 15px 15px;
+      padding: 0 35px;
+    }
+    .timeline-line {
+      position: absolute;
+      right: 50%;
+      top: 10px;
+      bottom: 10px;
+      width: 1px;
+      background: #ccc;
+      transform: translateX(50%);
+    }
+    .timeline-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+    .timeline-node .node-icon {
+      width: 44px;
+      height: 44px;
+      background: #fff;
+      border: 1px solid var(--gold-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .timeline-node .node-title {
+      font-size: 14px;
+      color: #222;
+      font-weight: 600;
+    }
+    .timeline-node .node-time {
+      font-size: 12px;
+      color: #777;
+      margin-top: 2px;
+    }
+
+    /* سيكشن القوانين / Instructions */
+    .rules-list {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 0 10px;
+    }
+    .rule-item {
+      font-size: 13px;
+      color: #444;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Amiri', serif;
+      font-size: 15px;
+    }
+
+    .location-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 24px;
+      background: #ffffff;
+      border: 1px solid #d3c4b1;
+      border-radius: 50px;
+      color: #444;
+      text-decoration: none;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .rsvp-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 10px;
+      text-align: right;
+    }
+    .input-box {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e0d8cc;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #faf8f5;
+      outline: none;
+    }
+    .rsvp-question {
+      font-size: 13px;
+      color: #555;
+      margin-top: 5px;
+      text-align: center;
+    }
+    .radio-choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 5px 0;
+    }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #444;
+      cursor: pointer;
+    }
+    .submit-btn {
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-viewport">
+
+    <!-- 1. شاشة الظرف الافتتاحية -->
+    <section id="envelope-screen">
+      <div class="top-brand">
+        <span class="script">Kinda's</span>
+        <span class="caps">BIRTHDAY</span>
+      </div>
+
+      <div class="envelope-box" id="envelope" onclick="openEnvelope()">
+        <div class="flap"></div>
+        <div class="wax-seal">
+          <span>k</span>
+        </div>
+        <div class="pocket"></div>
+      </div>
+
+      <div class="open-hint">اضغط على الختم لفتح الدعوة ✉️</div>
+    </section>
+
+    <!-- 2. محتوى الدعوة -->
+    <main class="content-stream" id="contentStream">
+
+      <!-- كرت Save The Date -->
+      <section class="hero-card">
+        <div class="polaroid-frame">
+          <img src="kindasbd.jpeg" alt="birthday">
+        </div>
+        <div class="hero-title">
+          Save
+          <span>THE Date</span>
+        </div>
+        <div class="mini-seal">k</div>
+        <a class="scroll-btn" onclick="scrollToDetails()">اضغط هنا للتفاصيل ↓</a>
+      </section>
+
+      <!-- كرت الدعوة -->
+      <section class="arched-invitation-card" id="invitationDetails">
+        <svg class="cake-icon" viewBox="0 0 24 24" width="40" height="40">
+          <path d="M3 19h18a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z" fill="#888888"/>
+          <path d="M4 13h16v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5z" fill="#d2691e"/>
+          <path d="M4 11h16v2H4z" fill="#fff8dc"/>
+          <path d="M4 8h16v3H4z" fill="#8b4513"/>
+          <path d="M4 8c0 1.5 1 2 2 2s2-1 2-2 1 2 2 2 2-1 2-2 1 2 2 2 2-1 2-2 1 2 2 2h2v-2H4z" fill="#ffffff"/>
+          <path d="M11 4h2v4h-2z" fill="#ff4d4d"/>
+          <path d="M12 3v1" stroke="#333" stroke-width="0.8"/>
+          <path d="M12 1c-1 1-1.5 2-1.5 2.5a1.5 1.5 0 0 0 3 0C13.5 3 13 2 12 1z" fill="#ffa500"/>
+        </svg>
+
+        <p class="invitation-quote">
+          « سنة جديدة من عمري بتفتح بابها اليوم<br>
+          وبكل الحب بستقبل عامي الجديد معكم! »
+        </p>
+
+        <div class="invitation-body">
+          لأن وجودكم هو احلى ما في العيد<br>
+          يسعدني تشاركوني احتفالي بيوم ميلادي
+          <span class="graduate-name">كنوده</span>
+          وذلك بمشيئة الله تعالى يوم<br>
+          <strong>الثلاثاء</strong>
+        </div>
+
+        <div class="invitation-date">
+          بتاريخ
+          <span class="big-date">07 / 07 / 2026</span>
+        </div>
+      </section>
+
+      <!-- العداد التنازلي -->
+      <section class="white-section-card">
+        <div class="section-header">الـعـد الـتـنـازلـي</div>
+        <div class="countdown-grid">
+          <div class="countdown-item">
+            <span class="num" id="days">04</span>
+            <span class="unit">DAYS</span>
+          </div>
+          <span class="countdown-colon">:</span>
+          <div class="countdown-item">
+            <span class="num" id="hours">02</span>
+            <span class="unit">HOURS</span>
+          </div>
+          <span class="countdown-colon">:</span>
+          <div class="countdown-item">
+            <span class="num" id="minutes">11</span>
+            <span class="unit">MINUTES</span>
+          </div>
+          <span class="countdown-colon">:</span>
+          <div class="countdown-item">
+            <span class="num" id="seconds">49</span>
+            <span class="unit">SECONDS</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- تفاصيل الحفل -->
+      <section class="white-section-card">
+        <div class="section-header">تفاصيل ♡ الحفل</div>
+        <div class="timeline-container">
+          <div class="timeline-line"></div>
+          <div class="timeline-node">
+            <div class="node-icon">☕</div>
+            <div class="node-title">استقبال الضيوف</div>
+            <div class="node-time">7:00 pm</div>
+          </div>
+          <div class="timeline-node">
+            <div class="node-icon">🎂</div>
+            <div class="node-title">قص الكعك</div>
+            <div class="node-time">9:00 pm</div>
+          </div>
+          <div class="timeline-node">
+            <div class="node-icon">✨</div>
+            <div class="node-title">الاحتفال والسهرة</div>
+            <div class="node-time">10:00 pm - Until Late 🌙</div>
+          </div>
+        </div>
+
+        <!-- تفاصيل العنوان والموقع -->
+        <div style="margin: 20px 0 10px; font-size: 14px; color: #444; line-height: 1.8; font-family: 'Amiri', serif;">
+          📍 <strong>الموقع:</strong> السالمية، قطعة 12، مقابل مدرسة الإخلاص<br>
+          🏢 <strong>ملاحظة:</strong> عمارة بهمن - الدور السادس - شقة 24
+        </div>
+
+        <a href="https://www.google.com/maps/search/?api=1&query=مدرسة+الإخلاص+السالمية+قطعة+12" target="_blank" class="location-pill-btn">
+          <span>فتح الموقع على الخريطة</span>
+          <span>📍</span>
+        </a>
+      </section>
+      <!-- سيكشن القوانين / Rules Section -->
+      <section class="white-section-card">
+        <div class="section-header">تعليمات الحفل 🤍</div>
+        <div class="rules-list">
+          <div class="rule-item">💌 الدعوة خاصة للأصدقاء المقربين فقط.</div>
+          <div class="rule-item">🚫 يمنع اصطحاب أطفال أو مرافقين.</div>
+          <div class="rule-item">📸 يمنع التصوير منعاً باتاً للحفاظ على الخصوصية.</div>
+          <div class="rule-item">🚭 الحفل خالي من التدخين.</div>
+        </div>
+      </section>
+
+      <!-- ركن الهدايا بتنسيق ولون مختلف ومميز -->
+      <section class="gift-section-card">
+        <div class="gift-title">🎁 ركن الهدايا</div>
+        <p class="gift-desc">
+          وجودكم هو أثمن هدية وأكبر فرحة لي بهذا اليوم، ولكن لسروركم تم تخصيص ركن خاص للهدايا لمن يرغب بذلك.
+        </p>
+      </section>
+
+      <!-- تأكيد الحضور -->
+      <section class="white-section-card">
+        <div class="section-header">الرجاء تأكيد الحضور ♡</div>
+        <form class="rsvp-form" onsubmit="submitRSVP(event)">
+          <input type="text" class="input-box" placeholder="الاسم" required>
+          <div class="rsvp-question">هل ستشرفيننا بحضور عيد ميلادي؟</div>
+          <div class="radio-choices">
+            <label class="radio-label">
+              <input type="radio" name="attendance" value="yes" required>
+              <span>يشرفني الحضور</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="attendance" value="no">
+              <span>أعتذر عن عدم تمكني من الحضور</span>
+            </label>
+          </div>
+          <button type="submit" class="submit-btn">تأكيد</button>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function openEnvelope() {
+      const env = document.getElementById('envelope');
+      const screen = document.getElementById('envelope-screen');
+      const content = document.getElementById('contentStream');
+
+      env.classList.add('is-open');
+
+      setTimeout(() => {
+        screen.style.transform = 'translateY(-100%)';
+        screen.style.opacity = '0';
+        content.classList.add('active');
+        setTimeout(() => {
+          screen.style.display = 'none';
+        }, 800);
+      }, 700);
+    }
+
+    function scrollToDetails() {
+      document.getElementById('invitationDetails').scrollIntoView({ 
+        behavior: 'smooth' 
+      });
+    }
+
+    const targetDate = new Date("July 7, 2026 17:00:00").getTime();
+
+    function updateTimer() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance > 0) {
+        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('days').innerText = String(d).padStart(2, '0');
+        document.getElementById('hours').innerText = String(h).padStart(2, '0');
+        document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+        document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+      }
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    function submitRSVP(e) {
+      e.preventDefault();
+      alert('تم إرسال تأكيد الحضور بنجاح، نتشرف بحضوركم ✨');
+    }
+  </script>
+</body>
+</html>
